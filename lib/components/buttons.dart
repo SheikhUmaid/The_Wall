@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 
-class AuthButton extends StatelessWidget {
-  const AuthButton({
-    super.key,
-    required this.title,
-    required this.onClick,
-  });
-  final String title;
+class AuthButton extends StatefulWidget {
+  AuthButton(
+      {super.key,
+      required this.title,
+      required this.onClick,
+      this.loading = false});
+  final Widget title;
   final void Function()? onClick;
+  bool loading;
+
+  @override
+  State<AuthButton> createState() => _AuthButtonState();
+}
+
+class _AuthButtonState extends State<AuthButton> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -22,16 +29,7 @@ class AuthButton extends StatelessWidget {
               bottomLeft: Radius.circular(10),
               bottomRight: Radius.circular(10),
             )),
-        child: TextButton(
-          onPressed: onClick,
-          child: Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
-          ),
-        ),
+        child: TextButton(onPressed: widget.onClick, child: widget),
       ),
     );
   }

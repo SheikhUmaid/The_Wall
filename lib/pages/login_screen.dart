@@ -3,13 +3,42 @@ import 'package:flutter/material.dart';
 import 'package:the_wall/components/buttons.dart';
 import 'package:the_wall/components/round_tl.dart';
 import 'package:the_wall/components/text_fields.dart';
+import 'package:the_wall/utils/toast.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  bool loggingIn = false;
+
+  void login() {
+    loggingIn = true;
+
+    _auth
+        .signInWithEmailAndPassword(
+            email: emailController.text.toString(),
+            password: passwordController.text.toString())
+        .then((value) {
+      Utilities.showToast(msg: 'Signed in Successfully', color: Colors.green);
+      loggingIn = false;
+    }).onError((error, stackTrace) {
+      Utilities.showToast(msg: error.toString(), color: Colors.red);
+    });
+    loggingIn = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,11 +89,17 @@ class LoginScreen extends StatelessWidget {
                         isPassword: true,
                       ),
                       AuthButton(
-                        title: 'Login',
+                        title: loggingIn
+                            ? const CircularProgressIndicator()
+                            : const Text(
+                                'login',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
                         onClick: () {
-                          _auth.signInWithEmailAndPassword(
-                              email: emailController.text.toString(),
-                              password: passwordController.text.toString());
+                          login();
                         },
                       ),
                       const SizedBox(
