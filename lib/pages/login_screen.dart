@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:the_wall/components/buttons.dart';
 import 'package:the_wall/components/round_tl.dart';
@@ -8,6 +9,7 @@ class LoginScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,8 +62,9 @@ class LoginScreen extends StatelessWidget {
                       AuthButton(
                         title: 'Login',
                         onClick: () {
-                          print(emailController.text);
-                          print(passwordController.text);
+                          _auth.signInWithEmailAndPassword(
+                              email: emailController.text.toString(),
+                              password: passwordController.text.toString());
                         },
                       ),
                       const SizedBox(

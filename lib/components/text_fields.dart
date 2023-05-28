@@ -6,12 +6,13 @@ class AuthTextField extends StatelessWidget {
       required this.title,
       required this.hint,
       this.isPassword = false,
-      this.controller});
+      this.controller,
+      this.validator});
   final String title;
   final String hint;
   final bool isPassword;
   final TextEditingController? controller;
-
+  final String? Function(String?)? validator;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +25,7 @@ class AuthTextField extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title),
-            TextField(
+            TextFormField(
               controller: controller,
               obscureText: isPassword,
               decoration: InputDecoration(
@@ -32,6 +33,7 @@ class AuthTextField extends StatelessWidget {
                 border: InputBorder.none,
                 // errorText: 'Error',
               ),
+              validator: validator,
             ),
           ],
         ),
