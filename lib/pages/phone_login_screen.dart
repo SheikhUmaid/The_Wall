@@ -5,44 +5,34 @@ import 'package:the_wall/components/round_tl.dart';
 import 'package:the_wall/components/text_fields.dart';
 import 'package:the_wall/utils/toast.dart';
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+class PhoneLoginScreen extends StatefulWidget {
+  const PhoneLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<PhoneLoginScreen> createState() => _PhoneLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
-
-  final TextEditingController passwordController = TextEditingController();
+class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
+  final TextEditingController phoneController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  bool loggingIn = false;
+  bool sendingOTP = false;
 
-  void login() {
+  void phoneLogin() {
     setState(() {
-      loggingIn = true;
+      sendingOTP = !sendingOTP;
     });
-    _auth
-        .signInWithEmailAndPassword(
-            email: emailController.text.toString(),
-            password: passwordController.text.toString())
-        .then((value) {
-      Utilities.showToast(msg: 'Signed in Successfully', color: Colors.green);
-      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-      setState(() {
-        loggingIn = false;
-      });
-    }).onError((error, stackTrace) {
-      Utilities.showToast(msg: error.toString(), color: Colors.red);
-      setState(() {
-        loggingIn = false;
-      });
-    });
+
+    _auth.verifyPhoneNumber(
+      phoneNumber: phoneController.text,
+      verificationCompleted: (_) {},
+      verificationFailed: (e) {},
+      codeSent: (_, __) {},
+      codeAutoRetrievalTimeout: (e) {},
+    );
   }
 
   @override
@@ -74,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 30,
                       ),
                       const Text(
-                        'Login',
+                        'SMS Login',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -84,28 +74,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 30,
                       ),
                       AuthTextField(
-                        controller: emailController,
-                        title: 'Email',
-                        hint: 'name@email.domain',
-                      ),
-                      AuthTextField(
-                        controller: passwordController,
-                        title: 'Password',
-                        hint: '********',
-                        isPassword: true,
+                        controller: phoneController,
+                        title: 'Phone',
+                        hint: '+91 7006786167',
                       ),
                       AuthButton(
-                        title: loggingIn
+                        title: sendingOTP
                             ? const CircularProgressIndicator()
                             : const Text(
-                                'login',
+                                'Send OTP',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                 ),
                               ),
                         onClick: () {
-                          login();
+                          phoneLogin();
                         },
                       ),
                       const SizedBox(
@@ -128,10 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           OtherLogin(
                             onClick: () {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  '/phoneLoginScreen', (route) => false);
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context, '/login', (route) => false);
                             },
-                            iconData: Icons.phone,
+                            iconData: Icons.email,
                           ),
                           OtherLogin(
                             onClick: () {},

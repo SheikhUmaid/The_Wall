@@ -7,12 +7,14 @@ class AuthTextField extends StatelessWidget {
       required this.hint,
       this.isPassword = false,
       this.controller,
-      this.validator});
+      this.validator,
+      this.textInputType});
   final String title;
   final String hint;
   final bool isPassword;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
+  final TextInputType? textInputType;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -26,6 +28,7 @@ class AuthTextField extends StatelessWidget {
           children: [
             Text(title),
             TextFormField(
+              keyboardType: TextInputType.text,
               controller: controller,
               obscureText: isPassword,
               decoration: InputDecoration(

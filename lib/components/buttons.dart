@@ -27,3 +27,27 @@ class AuthButton extends StatelessWidget {
     );
   }
 }
+
+class OtherLogin extends StatelessWidget {
+  const OtherLogin({super.key, required this.iconData, this.onClick});
+  final IconData iconData;
+  final void Function()? onClick;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onClick,
+      child: Container(
+        height: 75,
+        width: 75,
+        decoration: const BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.all(Radius.circular(12))),
+        child: Icon(
+          iconData,
+          color: Colors.white,
+          size: 50,
+        ),
+      ),
+    );
+  }
+}
