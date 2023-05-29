@@ -99,7 +99,13 @@ class SignUpScreen extends StatelessWidget {
                         },
                       ),
                       AuthButton(
-                        title: 'Sign Up',
+                        title: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
                         onClick: () {
                           if (_globalKey.currentState!.validate()) {
                             _auth

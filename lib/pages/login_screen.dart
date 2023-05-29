@@ -24,19 +24,24 @@ class _LoginScreenState extends State<LoginScreen> {
   bool loggingIn = false;
 
   void login() {
-    loggingIn = true;
-
+    setState(() {
+      loggingIn = true;
+    });
     _auth
         .signInWithEmailAndPassword(
             email: emailController.text.toString(),
             password: passwordController.text.toString())
         .then((value) {
       Utilities.showToast(msg: 'Signed in Successfully', color: Colors.green);
-      loggingIn = false;
+      setState(() {
+        loggingIn = false;
+      });
     }).onError((error, stackTrace) {
       Utilities.showToast(msg: error.toString(), color: Colors.red);
+      setState(() {
+        loggingIn = false;
+      });
     });
-    loggingIn = false;
   }
 
   @override

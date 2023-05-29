@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:the_wall/pages/Signin_screen.dart';
+import 'package:the_wall/pages/signup_screen.dart';
 import 'package:the_wall/pages/login_screen.dart';
 import 'package:the_wall/pages/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
