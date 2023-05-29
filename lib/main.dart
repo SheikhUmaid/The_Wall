@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_wall/pages/home_screen.dart';
+import 'package:the_wall/pages/otp_screen.dart';
 import 'package:the_wall/pages/phone_login_screen.dart';
 import 'package:the_wall/pages/signup_screen.dart';
 import 'package:the_wall/pages/login_screen.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => LoginScreen(),
         '/signup': (context) => SignUpScreen(),
         '/home': (context) => HomeScreen(),
-        '/phoneLoginScreen': (_) => const PhoneLoginScreen()
+        '/phoneLoginScreen': (_) => const PhoneLoginScreen(),
       },
     );
   }

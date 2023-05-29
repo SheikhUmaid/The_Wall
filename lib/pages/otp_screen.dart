@@ -3,56 +3,41 @@ import 'package:flutter/material.dart';
 import 'package:the_wall/components/buttons.dart';
 import 'package:the_wall/components/round_tl.dart';
 import 'package:the_wall/components/text_fields.dart';
-import 'package:the_wall/pages/otp_screen.dart';
 import 'package:the_wall/utils/toast.dart';
+import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
-class PhoneLoginScreen extends StatefulWidget {
-  const PhoneLoginScreen({super.key});
+class OTPScreen extends StatefulWidget {
+  const OTPScreen({super.key, required this.verificationId});
+  final String verificationId;
 
   @override
-  State<PhoneLoginScreen> createState() => _PhoneLoginScreenState();
+  State<OTPScreen> createState() => _OTPScreenState();
 }
 
-class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
+class _OTPScreenState extends State<OTPScreen> {
   final TextEditingController phoneController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   bool sendingOTP = false;
 
-  void phoneLogin() {
+  Future<void> verifyOTP(String verificationCode, BuildContext context) async {
     setState(() {
       sendingOTP = !sendingOTP;
     });
+    final credentials = PhoneAuthProvider.credential(
+        verificationId: widget.verificationId, smsCode: verificationCode);
 
-    _auth.verifyPhoneNumber(
-      phoneNumber: phoneController.text,
-      verificationCompleted: (_) {},
-      verificationFailed: (e) {
-        Utilities.showToast(msg: e.toString());
-        setState(() {
-          sendingOTP = !sendingOTP;
-        });
-      },
-      codeSent: (String verificationId, __) {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    OTPScreen(verificationId: verificationId.toString())));
-        setState(() {
-          sendingOTP = !sendingOTP;
-        });
-      },
-      codeAutoRetrievalTimeout: (e) {
-        Utilities.showToast(msg: e.toString() + "Time OUT");
-        setState(() {
-          sendingOTP = !sendingOTP;
-        });
-      },
-    );
+    try {
+      await _auth.signInWithCredential(credentials);
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    } catch (e) {
+      Utilities.showToast(msg: e.toString(), color: Colors.red);
+      setState(() {
+        sendingOTP = !sendingOTP;
+      });
+    }
   }
 
   @override
@@ -84,7 +69,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                         height: 30,
                       ),
                       const Text(
-                        'SMS Login',
+                        'Enter OTP',
                         style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.bold,
@@ -93,24 +78,31 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                       const SizedBox(
                         height: 30,
                       ),
-                      AuthTextField(
-                        controller: phoneController,
-                        title: 'Phone',
-                        hint: '+91 7006786167',
+                      OtpTextField(
+                        numberOfFields: 6,
+                        borderColor: Colors.black,
+                        showFieldAsBox: true,
+                        fieldWidth: 50,
+
+                        onCodeChanged: (String code) async {},
+                        //runs when every textfield is filled
+
+                        onSubmit: (String verificationCode) async {
+                          Utilities.showToast(msg: verificationCode);
+                          await verifyOTP(verificationCode, context);
+                        }, // end onSubmit
                       ),
                       AuthButton(
                         title: sendingOTP
                             ? const CircularProgressIndicator()
                             : const Text(
-                                'Send OTP',
+                                'Continue',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                 ),
                               ),
-                        onClick: () {
-                          phoneLogin();
-                        },
+                        onClick: () {},
                       ),
                       const SizedBox(
                         height: 20,
