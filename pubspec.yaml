@@ -41,6 +41,7 @@ dependencies:
   firebase_core: ^2.13.0
   firebase_storage: ^11.2.1
   cloud_firestore: ^4.7.1
+  firebase_database: ^10.2.1
   fluttertoast: ^8.2.2
   flutter_otp_text_field: ^1.1.1
   google_sign_in: ^6.1.2
@@ -98,3 +99,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+
+
+# {
+#   "rules": {
+#     ".read": "now < 1687977000000",  // 2023-6-29
+#     ".write": "now < 1687977000000",  // 2023-6-29
+#   }
+# }

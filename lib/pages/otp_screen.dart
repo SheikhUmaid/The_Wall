@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:the_wall/components/buttons.dart';
 import 'package:the_wall/components/round_tl.dart';
-import 'package:the_wall/components/text_fields.dart';
 import 'package:the_wall/utils/toast.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 

@@ -1,10 +1,76 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:the_wall/components/buttons.dart';
 import 'package:the_wall/utils/toast.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
+  final TextEditingController postController = TextEditingController();
+  final dbRef = FirebaseDatabase.instance.ref();
+  bool uploading = false;
+  void upload(BuildContext context) {
+    dbRef.child('1').set({
+      'id': 1,
+    });
+    Navigator.of(context).pop();
+  }
+
+  void uploadPost(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) => Dialog(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Post',
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                    TextField(
+                      controller: postController,
+                      decoration: const InputDecoration(
+                          hintText: 'What are your thoughts'),
+                    ),
+                    AuthButton(
+                        title: uploading
+                            ? const CircularProgressIndicator()
+                            : const Text(
+                                'Upload',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                        onClick: () {
+                          upload(context);
+                        }),
+                    AuthButton(
+                        title: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                          ),
+                        ),
+                        onClick: () {
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                ),
+              ),
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +96,12 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Center(
         child: Text('Home Screen'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          uploadPost(context);
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
