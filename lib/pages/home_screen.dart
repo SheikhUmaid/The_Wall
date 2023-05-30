@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:the_wall/components/buttons.dart';
 import 'package:the_wall/utils/toast.dart';
@@ -17,10 +18,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final dbRef = FirebaseDatabase.instance.ref('Posts');
   bool uploading = false;
   void upload(BuildContext context) {
-    dbRef.child('1').set({
+    // focus the postController
+    FocusScope.of(context).requestFocus(FocusNode());
+    dbRef.child(DateTime.now().millisecondsSinceEpoch.toString()).set({
       'title': postController.text.toString(),
     }).then((value) {
       Utilities.showToast(msg: 'Uploaded Successfully', color: Colors.green);
+      postController.clear();
     }).onError((error, stackTrace) {
       Utilities.showToast(msg: error.toString(), color: Colors.red);
     });
@@ -98,8 +102,25 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: Center(
-        child: Text('Home Screen'),
+      body: Column(
+        children: [
+          Expanded(
+            child: FirebaseAnimatedList(
+              query: dbRef,
+              itemBuilder: (BuildContext context, DataSnapshot snapshot,
+                  Animation<double> animation, int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    tileColor: Colors.white,
+                    title: Text(snapshot.child('title').value.toString()),
+                    textColor: Colors.black,
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
