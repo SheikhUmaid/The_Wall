@@ -14,11 +14,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   final TextEditingController postController = TextEditingController();
-  final dbRef = FirebaseDatabase.instance.ref();
+  final dbRef = FirebaseDatabase.instance.ref('Posts');
   bool uploading = false;
   void upload(BuildContext context) {
     dbRef.child('1').set({
-      'id': 1,
+      'title': postController.text.toString(),
+    }).then((value) {
+      Utilities.showToast(msg: 'Uploaded Successfully', color: Colors.green);
+    }).onError((error, stackTrace) {
+      Utilities.showToast(msg: error.toString(), color: Colors.red);
     });
     Navigator.of(context).pop();
   }
